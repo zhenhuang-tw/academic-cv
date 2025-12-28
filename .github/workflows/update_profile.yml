@@ -5,23 +5,38 @@ on:
     branches:
       - main
     paths:
-      - 'data.json'      # 當資料變更時觸發
-      - 'templates/**'   # 當模板變更時觸發
-      - 'build.py'       # 當腳本變更時觸發
+      - 'data.json' # 當資料變更時觸發
+      - 'templates/**' # 當模板變更時觸發
+      - 'build.py' # 當腳本變更時觸發
+      - '.github/workflows/update_profile.yml'
+  
+  # 允許手動觸發
+  workflow_dispatch:
+
+# 設定 GITHUB_TOKEN 的權限，這是部署 Pages 必要的
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 避免同時間多次部署造成衝突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write  # 需要寫入權限來 commit 生成的 html
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout content
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
@@ -32,16 +47,15 @@ jobs:
 
       - name: Run build script
         run: python build.py
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Commit and Push changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # 檢查是否有檔案變更
-          git add index.html zh.html
-          
-          # 如果沒有變更，git commit 會失敗，所以用 || echo 來忽略錯誤
-          git commit -m "Auto-generate HTML site from data.json" || echo "No changes to commit"
-          
-          git push
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.output'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

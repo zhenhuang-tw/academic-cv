@@ -1,0 +1,6 @@
+# 忽略自動生成的網站內容
+.output/
+
+# 忽略 Python 快取
+__pycache__/
+*.pyc
