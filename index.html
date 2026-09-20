@@ -15,7 +15,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: "class",
+        // 深色樣式只套用在螢幕，列印時一律使用淺色，避免淺灰字印在白紙上
+        darkMode: ["variant", "@media screen { &:where(.dark, .dark *) }"],
         theme: {
           extend: {
             colors: {
@@ -29,7 +30,9 @@
     </script>
     <style>
       html { color-scheme: light; }
-      html.dark { color-scheme: dark; }
+      @media screen {
+        html.dark { color-scheme: dark; }
+      }
 
       /* 僅在使用者未要求減少動態效果時，才啟用主題切換的漸變 */
       @media (prefers-reduced-motion: no-preference) {
@@ -138,7 +141,7 @@
         <button
           id="theme-toggle"
           type="button"
-          class="hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-400"
+          class="hidden print:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-400"
           aria-label="切換為深色模式"
         >
           <svg
