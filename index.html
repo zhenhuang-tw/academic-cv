@@ -141,13 +141,18 @@
         <button
           id="theme-toggle"
           type="button"
-          class="hidden print:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-400"
+          hidden
+          class="print:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-400"
           aria-label="切換為深色模式"
         >
           <svg
             id="theme-toggle-light-icon"
-            aria-hidden="true" focusable="false"
-            class="hidden w-5 h-5"
+            aria-hidden="true"
+            focusable="false"
+            style="display: none"
+            width="20"
+            height="20"
+            class="w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -160,8 +165,12 @@
           </svg>
           <svg
             id="theme-toggle-dark-icon"
-            aria-hidden="true" focusable="false"
-            class="hidden w-5 h-5"
+            aria-hidden="true"
+            focusable="false"
+            style="display: none"
+            width="20"
+            height="20"
+            class="w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +190,7 @@
           <p class="text-lg text-primary dark:text-blue-400 font-medium mb-4" lang="en">Zhen Huang</p>
           <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
             <span class="flex items-center gap-1">
-              <svg aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width="16" height="16" aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -198,7 +207,7 @@
               >
             </span>
             <span class="flex items-center gap-1">
-              <svg aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width="16" height="16" aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -215,7 +224,7 @@
               </a>
             </span>
             <span class="flex items-center gap-1">
-              <svg aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg width="16" height="16" aria-hidden="true" focusable="false" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -299,6 +308,8 @@
                 <svg
                   aria-hidden="true"
                   focusable="false"
+                  width="14"
+                  height="14"
                   class="w-3.5 h-3.5"
                   fill="none"
                   stroke="currentColor"
@@ -379,6 +390,8 @@
               class="inline-flex items-center text-sm font-medium text-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-md whitespace-nowrap"
             >
               <svg
+                width="16"
+                height="16"
                 class="w-4 h-4 mr-1"
                 fill="none"
                 stroke="currentColor"
@@ -406,6 +419,8 @@
           >
             <div class="flex items-center gap-2">
               <svg
+                width="16"
+                height="16"
                 class="w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
@@ -422,6 +437,8 @@
             </div>
             <div class="flex items-center gap-2">
               <svg
+                width="16"
+                height="16"
                 class="w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
@@ -438,6 +455,8 @@
             </div>
             <div class="flex items-center gap-2 md:col-span-2">
               <svg
+                width="16"
+                height="16"
                 class="w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
@@ -531,7 +550,7 @@
     <footer
       class="border-t border-gray-200 dark:border-gray-800 mt-12 py-8 text-center text-gray-500 dark:text-gray-400 text-sm"
     >
-      <p>&copy; <span id="year"></span> Zhen Huang. All rights reserved.</p>
+      <p>&copy; <span id="year">2026</span> Zhen Huang. All rights reserved.</p>
     </footer>
 
     <script>
@@ -545,12 +564,14 @@
       // 根據目前的 documentElement 狀態更新圖標
       function updateIcons() {
         const isDark = document.documentElement.classList.contains("dark");
-        darkIcon.classList.toggle("hidden", isDark);
-        lightIcon.classList.toggle("hidden", !isDark);
+        // 以 inline style 切換，即使 Tailwind 未載入也能正確顯示
+        darkIcon.style.display = isDark ? "none" : "";
+        lightIcon.style.display = isDark ? "" : "none";
         themeToggleBtn.setAttribute("aria-label", isDark ? "切換為淺色模式" : "切換為深色模式");
       }
 
-      themeToggleBtn.classList.remove("hidden");
+      // 按鈕預設隱藏，JS 就緒後才顯示，避免無 JS 時出現無作用的按鈕
+      themeToggleBtn.hidden = false;
 
       // 初始載入：檢查 localStorage 或 OS 偏好
       updateIcons();
