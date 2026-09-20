@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-TW" class="scroll-smooth scroll-pt-20">
+<html lang="zh-TW" class="motion-safe:scroll-smooth scroll-pt-20">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,6 +33,11 @@
         transition:
           background-color 0.3s ease,
           color 0.3s ease;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        body {
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
       }
     </style>
 
