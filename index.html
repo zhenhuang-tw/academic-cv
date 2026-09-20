@@ -121,10 +121,12 @@
         <button
           id="theme-toggle"
           type="button"
-          class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 focus:outline-none transition-colors"
+          class="hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:focus-visible:outline-blue-400"
+          aria-label="切換為深色模式"
         >
           <svg
             id="theme-toggle-light-icon"
+            aria-hidden="true" focusable="false"
             class="hidden w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -138,6 +140,7 @@
           </svg>
           <svg
             id="theme-toggle-dark-icon"
+            aria-hidden="true" focusable="false"
             class="hidden w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -467,14 +470,13 @@
 
       // 根據目前的 documentElement 狀態更新圖標
       function updateIcons() {
-        if (document.documentElement.classList.contains("dark")) {
-          darkIcon.classList.add("hidden");
-          lightIcon.classList.remove("hidden");
-        } else {
-          lightIcon.classList.add("hidden");
-          darkIcon.classList.remove("hidden");
-        }
+        const isDark = document.documentElement.classList.contains("dark");
+        darkIcon.classList.toggle("hidden", isDark);
+        lightIcon.classList.toggle("hidden", !isDark);
+        themeToggleBtn.setAttribute("aria-label", isDark ? "切換為淺色模式" : "切換為深色模式");
       }
+
+      themeToggleBtn.classList.remove("hidden");
 
       // 初始載入：檢查 localStorage 或 OS 偏好
       if (
