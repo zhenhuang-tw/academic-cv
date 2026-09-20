@@ -28,6 +28,9 @@
       };
     </script>
     <style>
+      html { color-scheme: light; }
+      html.dark { color-scheme: dark; }
+
       /* 避免切換暗色模式時的瞬間閃爍 */
       body {
         transition:
@@ -40,6 +43,16 @@
         }
       }
     </style>
+    <script>
+      (function () {
+        var dark = matchMedia("(prefers-color-scheme: dark)").matches;
+        try {
+          var saved = localStorage.getItem("color-theme");
+          if (saved) dark = saved === "dark";
+        } catch (e) {}
+        document.documentElement.classList.toggle("dark", dark);
+      })();
+    </script>
 
     <link
       rel="apple-touch-icon"
@@ -479,26 +492,14 @@
       themeToggleBtn.classList.remove("hidden");
 
       // 初始載入：檢查 localStorage 或 OS 偏好
-      if (
-        localStorage.getItem("color-theme") === "dark" ||
-        (!("color-theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
       updateIcons();
 
       // 監聽點擊事件
       themeToggleBtn.addEventListener("click", function () {
-        if (document.documentElement.classList.contains("dark")) {
-          document.documentElement.classList.remove("dark");
-          localStorage.setItem("color-theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          localStorage.setItem("color-theme", "dark");
-        }
+        const dark = document.documentElement.classList.toggle("dark");
+        try {
+          localStorage.setItem("color-theme", dark ? "dark" : "light");
+        } catch (e) {}
         updateIcons();
       });
     </script>
