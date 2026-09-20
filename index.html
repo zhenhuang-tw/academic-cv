@@ -31,15 +31,12 @@
       html { color-scheme: light; }
       html.dark { color-scheme: dark; }
 
-      /* 避免切換暗色模式時的瞬間閃爍 */
-      body {
-        transition:
-          background-color 0.3s ease,
-          color 0.3s ease;
-      }
+      /* 僅在使用者未要求減少動態效果時，才啟用主題切換的漸變 */
       @media (prefers-reduced-motion: no-preference) {
         body {
-          transition: background-color 0.3s ease, color 0.3s ease;
+          transition:
+            background-color 0.3s ease,
+            color 0.3s ease;
         }
       }
     </style>
